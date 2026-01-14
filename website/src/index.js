@@ -12,7 +12,6 @@ app.use(
   }),
 );
 
-const db = require('./config/db');
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
@@ -21,9 +20,15 @@ app.get('/', (req, res) => {
 const itemRouter = require('./routes/item/item.js');
 const registerRouter = require('./routes/auth/register.js');
 const userRouter = require('./routes/user/user.js');
+const authmiddleware = require('./middleware/auth.js');
+const loginRouter = require('./routes/auth/login.js');
+
 
 app.use('/register', registerRouter);
+app.use('/login', loginRouter);
 
+// Authentication Middleware --> all the routes called behin that need the bearer token to be accessed
+app.use(authmiddleware);
 
 app.use('/item', itemRouter);
 app.use('/user', userRouter);
