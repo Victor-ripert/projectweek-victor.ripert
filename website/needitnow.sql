@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS item (
     description VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status ENUM('not available', 'available', 'rented') DEFAULT 'not available',
+    price INT NOT NULL,
     user_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );

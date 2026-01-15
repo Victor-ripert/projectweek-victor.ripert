@@ -27,8 +27,8 @@ router.get("/", (req, res) => {
 // })
 
 router.post("/", (req, res) => {
-    const {title, description, user_id, status} = req.body;
-    if (!title || !description || !user_id || !status) {
+    const {title, description, user_id, status, price} = req.body;
+    if (!title || !description || !user_id || !status || !price) {
         return res.status(400).json({ msg: "Bad parameter" });
     }
     db.query(`SELECT COUNT(*) AS count FROM user WHERE id = '${ user_id }';`, (err, result) => {
@@ -37,26 +37,26 @@ router.post("/", (req, res) => {
             return res.status(400).json({ msg: "Bad parameter" });
         });
     const created_at = (new Date());
-    const query = 'INSERT INTO item (title, description, created_at, status, user_id) VALUES (?, ?, ?, ?, ?)';
-    db.query(query, [title, description, created_at, status, user_id], (err, result) => {
+    const query = 'INSERT INTO item (title, description, created_at, status, price, user_id) VALUES (?, ?, ?, ?, ?, ?)';
+    db.query(query, [title, description, created_at, status, price, user_id], (err, result) => {
         if (err) throw err;
         res.status(200).json({"id" : result.insertId, "title" : title, "description" : description,
-             "created_at" : created_at, "user_id" : user_id, "status": status});
+             "created_at" : created_at, "user_id" : user_id, "status": status, "price": price});
     })
 })
 
 router.put("/:id", (req, res) => {
     const id = Number(req.params.id);
-    const {title, description, status} = req.body;
-    if (!title || !description|| !status) {
+    const {title, description, status, price} = req.body;
+    if (!title || !description|| !status || !price) {
         return res.status(400).json({ msg: "Bad parameter" });
     }
-    db.query(`UPDATE item SET title = '${ title }', description = '${ description }', status = '${ status }' WHERE id = ${ id }`, (err, result) => {
+    db.query(`UPDATE item SET title = '${ title }', description = '${ description }', status = '${ status }', price = '${ price }' WHERE id = ${ id }`, (err, result) => {
         if (err) throw err;
         db.query(`SELECT * FROM item WHERE id = ${ id }`, (err, result) => {
             if (err) throw err;
-            return res.status(200).json({"id" : result[0].id, "title" : result[0].title, "description" : result[0].description,
-                 "created_at" : result[0].created_at, "user_id" : result[0].user_id, "status" : result[0].status});
+            return res.status(200).json({"id" : id, "title" : result[0].title, "description" : result[0].description,
+                 "created_at" : result[0].created_at, "user_id" : result[0].user_id, "status" : result[0].status, "price": result[0].price});
         })
     })
 })
