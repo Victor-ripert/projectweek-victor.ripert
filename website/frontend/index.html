@@ -115,15 +115,6 @@
             { href: 'product6.html', image: 'images/saw.png' }
         ];
 
-        const fallbackProducts = [
-            { title: 'Hammer', price: '1.00€ /day' },
-            { title: 'Electric Drill', price: '1.50€ /day' },
-            { title: 'Adjustable Wrench', price: '2.50€ /day' },
-            { title: 'Woodworking Hammer', price: '2.00€ /day' },
-            { title: 'Cordless Drill', price: '3.00€ /day' },
-            { title: 'Hand Saw', price: '1.50€ /day' }
-        ];
-
         const grid = document.getElementById('productGrid');
 
         function renderCards(products) {
@@ -149,7 +140,7 @@
                 const data = await res.json();
                 const items = Array.isArray(data.items) ? data.items : [];
                 if (!items.length) {
-                    renderCards(fallbackProducts);
+                    grid.innerHTML = '';
                     return;
                 }
                 const mapped = items.map((item) => ({
@@ -160,7 +151,7 @@
                 renderCards(mapped);
             } catch (err) {
                 console.error(err);
-                renderCards(fallbackProducts);
+                grid.innerHTML = '';
             }
         }
 
