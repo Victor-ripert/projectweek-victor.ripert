@@ -21,12 +21,14 @@ CREATE TABLE IF NOT EXISTS item (
     FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS transactions (
+CREATE TABLE IF NOT EXISTS transaction (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('draft', 'started', 'ended') DEFAULT 'draft',
-    user_id INT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+    end_date TIMESTAMP NOT NULL,
+    renter_id INT NOT NULL,
+    FOREIGN KEY (renter_id) REFERENCES user(id) ON DELETE CASCADE,
+    lender_id INT NOT NULL,
+    FOREIGN KEY (lender_id) REFERENCES user(id) ON DELETE CASCADE,
     item_id INT NOT NULL,
     FOREIGN KEY (item_id) REFERENCES item(id) ON DELETE CASCADE
 );

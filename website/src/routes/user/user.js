@@ -59,7 +59,7 @@ router.post("/info/:user_id", async (req, res) => {
             "country" : country, "zip_code" : zip_code, "city" : city, "address" : address,
             "balance" : balance, "trust_lvl" : trust_lvl, "user_id" : userId})
     } catch (err) {
-        return res.status(500).json({ msg: 'Internal error' });
+        return res.status(500).json({ msg: 'Internal error', "reason": err });
     }
 })
 
@@ -81,7 +81,7 @@ router.put('/info/:user_id', async (req, res) => {
 
     return res.status(200).json({ country, zip_code, city, address, balance, trust_lvl, phone_number, user_id: userId });
   } catch (err) {
-    return res.status(500).json({ msg: 'Internal error' });
+    return res.status(500).json({ msg: 'Internal error', "reason": err });
   }
 });
 
@@ -98,6 +98,6 @@ router.delete('/info/:user_id', async (req, res) => {
 
     return res.status(200).json({msg: "User's informations deleted"});
   } catch (err) {
-    return res.status(500).json({ msg: 'Internal error' });
+    return res.status(500).json({ msg: 'Internal error', "reason": err });
   }
 });

@@ -22,6 +22,7 @@ const registerRouter = require('./routes/auth/register.js');
 const userRouter = require('./routes/user/user.js');
 const authmiddleware = require('./middleware/auth.js');
 const loginRouter = require('./routes/auth/login.js');
+const transactionRouter = require('./routes/transaction/transaction.js');
 
 
 app.use('/register', registerRouter);
@@ -32,6 +33,7 @@ app.use(authmiddleware);
 
 app.use('/item', itemRouter);
 app.use('/user', userRouter);
+app.use('/transaction', transactionRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`Example app listening on port ${process.env.PORT}`);
