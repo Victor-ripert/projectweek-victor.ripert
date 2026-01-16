@@ -16,6 +16,18 @@ router.get("/", (req, res) => {
     })
 })
 
+router.get("/:item_id", (req, res) => {
+    const item_id = Number(req.params.item_id);
+    db.query('SELECT * FROM item WHERE id = ?', [item_id], (err, result) => {
+        if (err) throw err;
+        if (result.length == 0) {
+            return res.status(400).json({msg: "No item found"})
+        } else {
+        return res.status(200).json({items: result});
+        }
+    })
+})
+
 // router.get("/:id", (req, res) => {
 //     const id = Number(req.params.id);
 //     db.query(`SELECT * FROM item WHERE id = '${ id }'`, (err, result) => {

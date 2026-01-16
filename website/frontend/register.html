@@ -28,7 +28,7 @@
         <section id="register">
             <h1>Register</h1>
         
-            <form id="register-form">
+            <form id="register-form" action="http://localhost:3000/register" method="post">
                 <label for="firstname">First name:</label><br>
                 <input type="text" id="firstname" name="firstname" placeholder="First Name" required><br><br>
         
@@ -49,6 +49,36 @@
                 
     <!-- </main> -->
 
+
+    <script>
+        // Intercept form submit to POST, store token if returned, then redirect to index.html
+        const registerForm = document.getElementById('register-form');
+        registerForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(registerForm);
+            const payload = Object.fromEntries(formData.entries());
+            try {
+                const response = await fetch(registerForm.action, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) {
+                    const message = await response.text();
+                    alert('Registration failed: ' + message);
+                    return;
+                }
+                const data = await response.json().catch(() => ({}));
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                }
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error(error);
+                alert('Network error, please try again.');
+            }
+        });
+    </script>
 
 </body>
 </html>
