@@ -46,42 +46,73 @@
 
         <section id="principalProducts">
             <h2>Popular Items for Rent</h2>
-            <div class="product-grid">
-                <a href="hammer.html" class="product-card">
-                    <img src="images/hammer.png" alt="Steel Hammer for Rent">
-                    <h3>Hammer</h3>
-                    <p>1.00€ /day</p>
-                </a>
-                <a href="product2.html" class="product-card">
-                    <img src="images/drill.png" alt="Electric Drill for Rent">
-                    <h3>Electric Drill</h3>
-                    <p>1.50€ /day</p>
-                </a>
-                <a href="product3.html" class="product-card">
-                    <img src="images/wrench.png" alt="Adjustable Wrench for Rent">
-                    <h3>Adjustable Wrench</h3>
-                    <p>2.50€ /day</p>
-                </a>
-                <a href="product4.html" class="product-card">
-                    <img src="images/hammer2.png" alt="Woodworking Hammer for Rent">
-                    <h3>Woodworking Hammer</h3>
-                    <p>2.00€ /day</p>
-                </a>
-                <a href="product5.html" class="product-card">
-                    <img src="images/drill2.png" alt="Cordless Drill for Rent">
-                    <h3>Cordless Drill</h3>
-                    <p>3.00€ /day</p>
-                </a>
-                <a href="product6.html" class="product-card">
-                    <img src="images/saw.png" alt="Hand Saw for Rent">
-                    <h3>Hand Saw</h3>
-                    <p>$1.50€ /day</p>
-                </a>
-            </div>
+            <div class="product-grid" id="productGrid"></div>
         </section>
         
                 
     </main>
+
+    <script>
+        // Assets stay local; text (title/price) comes from API GET /item.
+        const assets = [
+            { href: 'hammer.html', image: 'images/hammer.png' },
+            { href: 'product2.html', image: 'images/drill.png' },
+            { href: 'product3.html', image: 'images/wrench.png' },
+            { href: 'product4.html', image: 'images/hammer2.png' },
+            { href: 'product5.html', image: 'images/drill2.png' },
+            { href: 'product6.html', image: 'images/saw.png' }
+        ];
+
+        const fallbackProducts = [
+            { title: 'Hammer', price: '1.00€ /day' },
+            { title: 'Electric Drill', price: '1.50€ /day' },
+            { title: 'Adjustable Wrench', price: '2.50€ /day' },
+            { title: 'Woodworking Hammer', price: '2.00€ /day' },
+            { title: 'Cordless Drill', price: '3.00€ /day' },
+            { title: 'Hand Saw', price: '1.50€ /day' }
+        ];
+
+        const grid = document.getElementById('productGrid');
+
+        function renderCards(products) {
+            grid.innerHTML = products.map(({ title, price }, idx) => {
+                const asset = assets[idx] || assets[assets.length - 1];
+                const href = asset.href;
+                const image = asset.image;
+                const alt = `${title} for rent`;
+                return `
+                    <a href="${href}" class="product-card">
+                        <img src="${image}" alt="${alt}">
+                        <h3>${title}</h3>
+                        <p>${price}</p>
+                    </a>
+                `;
+            }).join('');
+        }
+
+        async function loadProducts() {
+            try {
+                const res = await fetch('http://localhost:3000/item');
+                if (!res.ok) throw new Error('Failed to fetch items');
+                const data = await res.json();
+                const items = Array.isArray(data.items) ? data.items : [];
+                if (!items.length) {
+                    renderCards(fallbackProducts);
+                    return;
+                }
+                const mapped = items.map((item) => ({
+                    title: item.title || 'Untitled item',
+                    price: item.price ? `${item.price}€ /day` : 'N/A'
+                }));
+                renderCards(mapped);
+            } catch (err) {
+                console.error(err);
+                renderCards(fallbackProducts);
+            }
+        }
+
+        loadProducts();
+    </script>
 
     <!-- <footer>
         <p>&copy; 2023 Project X. All rights reserved.</p>
